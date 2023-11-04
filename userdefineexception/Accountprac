@@ -1,0 +1,70 @@
+public class myexception : ApplicationException
+        {
+            readonly int sal;
+            readonly string nm;
+          public  string smg;
+       
+      public myexception(int sal, string nm, string smg)
+            {
+                this.sal = sal;
+                this.nm = nm;
+                this.smg = smg;
+              }             
+               
+        }
+
+using System;
+
+namespace userdefine_exception
+{
+    public class employee
+    {
+        public employee() { }
+        public employee(string name, int sal)
+        {
+            Name = name;
+            Salary = sal;
+        }
+        public string Name { get; set; }
+        public int Salary { get; set; }
+
+        public void incriment(int amt)
+       {
+           if (amt > 10000)
+               throw new myexception(Salary, Name, "incriment above 10000 not allowed");
+             if (amt < 1)
+            {
+                throw new Exception("Incriment amount is in negative");
+            }
+          
+               Salary += amt;
+       }
+    }
+}
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            employee e1 = new employee("shubh", 5000);
+            employee e2 = new employee("janvi", 2000);
+            try
+            {
+                e1.incriment(1000);
+                e2.incriment(12000);
+            }
+               
+            catch (myexception ex)
+            {
+                Console.WriteLine(" "+ex.smg);
+            }
+            catch (Exception ez)
+            {
+                Console.WriteLine(ez.Message);
+
+            }
+            Console.WriteLine("{0},{1}",e1.Name,e1.Salary);
+            Console.ReadKey();
+        }
+    }
+
