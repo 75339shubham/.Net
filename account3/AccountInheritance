@@ -1,0 +1,147 @@
+/*
+ * 
+Create class Account having member variable id, name, balance
+Id is autoincrement it has getter property
+Name and balance need getter setter property
+//Ensure when you open account amt should not be <1
+Declare static double intrate=0.07;
+It has deposit method who’s job is to increase balance.
+Create two child class Savingaccount, Currentaccount
+It has fields typeofaccount.
+In Savingaccount,  child class it has withdraw method who’s job is to reduce balance. It is a rule to maintain minimum balance of rs1000 so declare
+const int minbal=1000
+ In Currentaccount,  child class it has withdraw method who’s job is to reduce balance here –ve balance is allowed.
+Create object of two child class and do the transaction
+In Account class write public override string ToString(){} which will display id name balance.
+
+ */
+
+
+using account3;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp2
+{
+    internal class AccountDemo
+    {
+        static void Main(string[] args)
+        {
+            CurrentAccount p1 = new CurrentAccount("rohit", 50000, "Current");
+            SavingAccount p2 = new SavingAccount("virat", 4000, "saving");
+            p1.WithDraw(3000);
+
+            Console.WriteLine(p1.ToString());
+            p1.Deposit(10000);
+            Console.WriteLine(p1.ToString());
+            p1.WithDraw(3000);
+            Console.WriteLine(p1.ToString());
+            p2.WithDraw(2000);
+            Console.WriteLine(p2.ToString());
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace account3
+{
+    internal class Account
+    {
+        int id;
+        string name;
+        double balance;
+        static int sid;
+        static double intrate = 0.07;
+
+        static Account()
+        {
+            Console.WriteLine("Welcome to Bank of Maharashtra \n");
+        }
+        public Account(string name, double balance)
+        {
+            this.id = ++sid;
+            this.name = name;
+            this.balance = balance;
+        }
+        public int ID
+        {
+            get { return id; }
+        }
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+        public double Balance
+        {
+            get { return balance; }
+            protected set { balance = value; }
+        }
+        public void Deposit(double d)
+        {
+            Console.WriteLine("***Moneey deposited sucessfully***");
+            Balance += d;
+        }
+        public override string ToString()
+        {
+            return string.Format($"{ID} {Name} {Balance} ");
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace account3
+{
+    internal class CurrentAccount : Account
+    {
+        string typeofaccount;
+        public CurrentAccount(string name, double balance, string typeofaccount) : base(name, balance)
+        {
+            this.typeofaccount = typeofaccount;
+        }
+        public void WithDraw(double amt)
+        {
+            Balance -= amt;
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace account3
+{
+    internal class SavingAccount : Account
+    {
+        string typeofaccount;
+        const int minbal = 1000;
+        public SavingAccount(string name, double balance, string typeofaccount) : base(name, balance)
+        {
+            this.typeofaccount = typeofaccount;
+        }
+        public void WithDraw(double amt)
+        {
+            if (Balance > minbal && amt < Balance)
+            {
+                Balance -= amt;
+            }
+            else
+                Console.WriteLine("Insufficent Balance");
+        }
+    }
+}
