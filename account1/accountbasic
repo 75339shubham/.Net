@@ -1,0 +1,72 @@
+
+/*
+ Q2)create a class account having members name ,id,balance
+create a method - public void deposit(int amt){balance=balance+num}
+create a method withdraw -public void withdraw(int amt){balance=balance-amt}
+create display method which will dispaly name and balance.
+create 2 object and do transaction.
+*/
+
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace assignmentday2
+{
+    internal class account
+    {
+        static account()
+        {
+            Console.WriteLine("welcome to bank of maharashtra");
+        }
+        string name;
+        static int id;
+        double  balance;
+                        
+        public account(string name,double balance) 
+        {
+             this.name = name;  
+            this.balance = balance;
+            id = ++id;
+        }
+
+        public void deposit(int amt)
+
+        {
+            this.balance = balance + amt;
+        }
+        public void withdraw(int amt)
+        {
+            this.balance= balance - amt;
+
+        }
+        public void disp()
+        {
+            Console.WriteLine("your id =" +id);
+            Console.WriteLine(this.name);
+            Console.WriteLine(this.balance);
+            
+        }
+
+        static void Main(string[] args)
+        {
+            account a1 = new account("rohit", 50000);
+            a1.disp();
+            a1.deposit(10000);
+            a1.disp();
+            a1.withdraw(50000);
+            a1.disp();
+            Console.WriteLine("=============================================================");
+            account a2 = new account("virat", 60000);
+            a2.disp();
+            a2.deposit(5000);
+            a2.disp();
+            a2.withdraw(50000);
+            a2.disp();
+             
+        }
+    }
+}
