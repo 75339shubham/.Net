@@ -1,0 +1,168 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace inmemorycrud
+{
+    internal class Employee
+    {
+        public int Id {  get; set; }
+        public string Name { get; set; }
+        
+        public double Salary { get; set; }
+        public string Address {  get; set; }
+
+    }
+}
+============================================================================================================================================================================================================
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace inmemorycrud
+{
+    internal interface IEmployeeRepository
+    {
+
+        Employee GetEmployee(int Id);
+        IEnumerable<Employee> GetAllEmployee();
+        Employee Add(Employee employee);
+        Employee Update(Employee employeeChanges);
+        Employee Delete(int Id);
+
+
+    }
+}
+======================================================================================================================================================================
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace inmemorycrud
+{
+    internal class MockEmployeeRepository : IEmployeeRepository
+    {
+        public static List<Employee> employees;
+
+        public MockEmployeeRepository()
+        { 
+    
+                employees = new List<Employee>()
+        {
+            new Employee{Id=1,Name="sagar",Salary=500000,Address="Pune" },
+            new Employee{Id=2,Name="surendra",Salary=100000,Address="Mumbai" },
+            new Employee{Id=3,Name="shubham",Salary=50000,Address="Ghatakopar" }
+
+        };
+            
+
+
+        }
+        public Employee Add(Employee employee)
+        {
+            employee.Id = employees.Max(x => x.Id) + 1 ;
+            employees.Add(employee);
+            return employee;
+            
+        }
+
+        public Employee Delete(int Id)
+        {
+            Employee emp = employees.FirstOrDefault(x => x.Id == Id);
+            if (emp != null)
+            {
+                employees.Remove(emp);
+            }
+            return emp;
+        }
+
+        public IEnumerable<Employee> GetAllEmployee()
+        {
+            return employees;
+        }
+
+        public Employee GetEmployee(int Id)
+        {
+            return employees.FirstOrDefault(x =>x.Id == Id);
+        }
+
+        public Employee Update(Employee employeeChanges)
+        {
+            Employee emp = employees.FirstOrDefault(x => x.Id == employeeChanges.Id);
+            if (emp != null) 
+            {
+                emp.Id = employeeChanges.Id;
+                emp.Name = employeeChanges.Name;
+                emp.Salary = employeeChanges.Salary;
+                emp.Address = employeeChanges.Address;
+            }
+            return emp;
+            
+        }
+    }
+}
+===============================================================================================================================================================================
+using System.ComponentModel.DataAnnotations;
+
+namespace inmemorycrud
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            MockEmployeeRepository db = new MockEmployeeRepository();
+
+            Display(db);
+
+            Employee e1 = db.Add(new Employee { Name = "Harshal", Salary = 70000, Address = "Kalyan" });
+
+            Console.WriteLine("new employee added");
+            Console.WriteLine("{0} {1} {2} {3}", e1.Id, e1.Name, e1.Salary, e1.Address);
+            Display(db);
+
+            Employee e2 = db.Delete(2);
+            Console.WriteLine("employee get deleted");
+            Console.WriteLine("{0} {1} {2} {3}", e2.Id, e2.Name, e2.Salary, e2.Address);
+            Display(db);
+            Employee e3=db.GetEmployee(3);
+            Console.WriteLine("{0} {1} {2} {3}", e3.Id, e3.Name, e3.Salary, e3.Address);
+           
+            Employee e4 = new Employee {Id=1,Name="yash",Salary=60000,Address="shirpur"};
+            UpdateData(e4, db);
+           
+        }
+
+
+
+
+    
+        public static void Display(MockEmployeeRepository db) 
+        { 
+            foreach(Employee a in db.GetAllEmployee() )
+            {
+                Console.WriteLine("{0} {1} {2} {3}",a.Id,a.Name,a.Salary,a.Address);
+
+            };
+
+        }
+
+        public static void UpdateData(Employee a, MockEmployeeRepository db)
+        {
+            Employee e5 = db.Update(a);
+            Console.WriteLine("{0} {1} {2} {3}", e5.Id, e5.Name, e5.Salary, e5.Address);
+            Display (db);
+
+
+        }
+
+
+
+    }
+}
