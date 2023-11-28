@@ -1,0 +1,175 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace dotnet
+{
+    internal class Customer
+    {
+        
+        
+            public int Id { get; set; }
+            public string Name { get; set; }
+
+            public string Mobile { get; set; }
+            public string Location { get; set; }
+              
+            public double Billamt {  get; set; }      
+        
+    }
+}
++++++++++++++++++++++++++++++++++++++++++++++
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace dotnet
+{
+    internal interface Icustrepo
+    {
+        Customer getcustomer(int Id);
+        IEnumerable<Customer> getallcustomer();
+
+
+        Customer add(Customer customer);
+
+        Customer Update(Customer customerchange);
+
+        Customer delete(int Id);
+
+    }
+}
+++++++++++++++++++++++++++++++++++++++++++++++++
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace dotnet
+{
+    internal class Mockicustrepo : Icustrepo
+    {
+        static int getid = 0;
+        public static List<Customer> customers;
+        public Mockicustrepo()
+        {
+            customers = new List<Customer>
+
+            {
+                new Customer {Name = "Raj",Location ="Andheri",Mobile ="9769201089",Billamt= 25850},
+                new Customer {Name = "Geeta",Location ="Andheri",Mobile ="97564089",Billamt= 3850},
+                new Customer {Name = "Rohan",Location ="Juhu",Mobile ="976534689",Billamt= 26750},
+                new Customer {Name = "Kavita",Location ="Juhu",Mobile ="974346",Billamt= 20250}
+
+
+            };
+
+        }
+
+        public Customer add(Customer customer)
+        {
+            customer.Id = customers.Max(x => x.Id) + 1;
+            customers.Add(customer);
+            return customer;
+        }
+
+        public Customer delete(int id)
+        {
+
+            Customer cust = customers.FirstOrDefault(x => x.Id == id);
+            if (cust != null)
+            {
+                customers.Remove(cust);
+            }
+            return cust;
+        }
+
+        public IEnumerable<Customer> getallcustomer()
+        {
+            return customers;
+        }
+
+        public Customer getcustomer(int Id)
+        {
+            return customers.FirstOrDefault(x => x.Id == Id);
+        }
+
+        public Customer Update(Customer customerchange)
+        {
+            Customer cust = customers.FirstOrDefault(x => x.Id == customerchange.Id);
+            if (cust != null)
+            {
+                cust.Id = customerchange.Id;
+                cust.Name =customerchange.Name;
+                cust.Mobile = customerchange.Mobile;
+                cust.Location =customerchange.Location;
+                cust.Billamt = customerchange.Billamt;
+            }
+            return cust;
+        }
+    }
+}
+++++++++++++++++++++++++++++++++++++++++++++++++++
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
+
+namespace dotnet
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            try
+            {
+                Mockicustrepo repo = new Mockicustrepo();
+                Display(repo);
+
+                Customer e1 = repo.add(new Customer { Name = "Harshal", Billamt = 70000, Location = "Kalyan", Mobile = "56565266" });
+
+                Console.WriteLine("new Customer added");
+                Console.WriteLine("{0} {1} {2} {3}", e1.Id, e1.Name, e1.Mobile, e1.Location, e1.Billamt);
+                Display(repo);
+
+                Customer e2 = repo.delete(2);
+                Console.WriteLine("Customer get deleted");
+                Console.WriteLine("{0} {1} {2} {3} {4}", e2.Id, e2.Name, e2.Location, e2.Mobile, e2.Billamt);
+                Display(repo);
+                Customer e3 = repo.getcustomer(3);
+                Console.WriteLine("{0} {1} {2} {3} {4}", e3.Id, e3.Name, e3.Location, e3.Mobile, e3.Billamt);
+
+                Customer e4 = new Customer { Name = "shubh", Billamt = 70000, Location = "ghatkopar", Mobile = "56565266" };
+                UpdateData(e4, repo);
+            }
+            catch (Exception ex) 
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+        }
+
+        public static void Display(Mockicustrepo repo)
+        {
+            foreach (Customer a in repo.getallcustomer())
+            {
+                Console.WriteLine("{0} {1} {2} {3} {4} ", a.Id, a.Name, a.Location, a.Mobile,a.Billamt);
+
+            };
+
+        }
+
+        public static void UpdateData(Customer a, Mockicustrepo repo)
+        {
+            Customer e5 = repo.Update(a);
+            Console.WriteLine("{0} {1} {2} {3} {4}", e5.Id, e5.Name, e5.Location, e5.Mobile,a.Billamt);
+            Display(repo);
+
+
+        }
+    }
+
+}
